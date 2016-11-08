@@ -67,6 +67,7 @@
     <Compile Include="Config\URLCollection.cs" />
     <Compile Include="Config\URLConfigSection.cs" />
     <Compile Include="Config\URLElement.cs" />
+    <Compile Include="CrawlerUnit.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -13,18 +13,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CrawlerUI.Config;
+
 namespace CrawlerUI
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-        private PreferencesLoader preferences = new PreferencesLoader();
+    {        
+        private CrawlerUnit application = new CrawlerUnit();
         public MainWindow()
-        {
-            preferences.LoadPreferences();
-            
+        {           
+            application.RunApplication();
+
             InitializeComponent();
         }
     }

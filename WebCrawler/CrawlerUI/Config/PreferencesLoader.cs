@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CrawlerUI.Config
 {
-    internal class PreferencesLoader
+    public class PreferencesLoader
     {
-        internal int Depth { get; set; } = 1;
-        internal List<string> URLs { get; set; } = new List<string>();
+        public int Depth { get; set; } = 1;
+        public List<string> URLs { get; set; } = new List<string>();
 
         internal void LoadPreferences()
         {
