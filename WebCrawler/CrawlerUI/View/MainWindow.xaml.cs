@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CrawlerUI.Config;
+using CrawlerUI.ViewModel;
 
 namespace CrawlerUI
 {
@@ -21,12 +22,11 @@ namespace CrawlerUI
     /// </summary>
     public partial class MainWindow : Window
     {        
-        private CrawlerUnit application = new CrawlerUnit();
+        private CrawlerUnit viewModel = new CrawlerUnit();
         public MainWindow()
-        {           
-            application.RunApplication();
-
+        {
             InitializeComponent();
+            viewModel.RunApplication();
         }
     }
 }

@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrawlerUI"
+        xmlns:ViewModelNamespace="clr-namespace:CrawlerUI.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+    <Window.Resources>
+        <ViewModelNamespace:CrawlerUnit x:Key="CrawlerUnit"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource CrawlerUnit}">
+        <TextBlock Text="{Binding CrawlerUnit.CrawlResult, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Margin="131,73,119,81"/>
     </Grid>
 </Window>
