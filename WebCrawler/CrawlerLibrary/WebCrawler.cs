@@ -24,8 +24,8 @@ namespace CrawlerLibrary
 
         public async Task<CrawlResult> PerformCrawlingAsync(List<string> rootUrls, string parentUrl, int currentCrawlDepth)
         {
-            if (currentCrawlDepth >= MaxCrawlDepth)
-                return new CrawlResult();
+            if (currentCrawlDepth > MaxCrawlDepth)
+                return new CrawlResult(parentUrl, null);
             currentCrawlDepth++;
 
             var results = new List<CrawlResult>();

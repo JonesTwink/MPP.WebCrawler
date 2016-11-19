@@ -22,11 +22,13 @@ namespace CrawlerUI
     /// </summary>
     public partial class MainWindow : Window
     {        
-        private CrawlerUnit viewModel = new CrawlerUnit();
+        private CrawlerViewModel viewModel;
         public MainWindow()
         {
             InitializeComponent();
-            viewModel.RunApplication();
+
+            viewModel = new CrawlerViewModel();
+
         }
     }
 }

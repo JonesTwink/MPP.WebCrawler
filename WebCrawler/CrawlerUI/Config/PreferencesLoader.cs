@@ -16,6 +16,7 @@ namespace CrawlerUI.Config
         {
             try
             {
+                ConfigurationManager.RefreshSection("appSettings");
                 Depth = Int32.Parse(ConfigurationManager.AppSettings["CrawlerDepth"]);
             }
             catch(FormatException)
@@ -34,6 +35,7 @@ namespace CrawlerUI.Config
         private List<string> GetURLSection()
         {
             List<string> URLStringsList = new List<string>();
+            ConfigurationManager.RefreshSection("URLSection");
             URLConfigSection URLSection = (URLConfigSection)ConfigurationManager.GetSection("URLSection");
 
             foreach (URLElement URLElement in URLSection.URLs)

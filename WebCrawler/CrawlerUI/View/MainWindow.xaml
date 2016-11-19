@@ -8,9 +8,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
-        <ViewModelNamespace:CrawlerUnit x:Key="CrawlerUnit"/>
+        <ViewModelNamespace:CrawlerViewModel x:Key="CrawlerViewModel"/>
+        <local:TreeViewConverter x:Key="TreeViewConverter"/>
     </Window.Resources>
-    <Grid DataContext="{StaticResource CrawlerUnit}">
-        <TextBlock Text="{Binding CrawlerUnit.CrawlResult, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Margin="131,73,119,81"/>
+    <Grid DataContext="{StaticResource CrawlerViewModel}" Name="MainGrid" Background="#FF131313">
+        <TreeView ItemsSource="{Binding CrawlResult, Converter={StaticResource TreeViewConverter}}" x:Name="treeView"   HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Background="#00000000" FontFamily="Consolas" Margin="0,0,0,66"/>
+        <Button Command="{Binding AsyncCrawlingCommand}" Content="Run" Margin="201,275,212,10"/>
     </Grid>
 </Window>

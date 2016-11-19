@@ -4,16 +4,17 @@ using System.ComponentModel;
 
 namespace CrawlerUI.ViewModel
 {
-    class ViewModelBase : INotifyPropertyChanged
+    internal class ViewModelBase : INotifyPropertyChanged
     {
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RaisePropertyChanged(string property)
         {
-            if (PropertyChanged != null)
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+                handler(this, new PropertyChangedEventArgs(property));
             }
         }
 
