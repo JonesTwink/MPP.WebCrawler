@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Logger;
 
 namespace CrawlerLibrary
 {
     public class WebCrawler : ISimpleWebCrawler
     {
-        private HtmlParser htmlParser = new HtmlParser();
+        private HtmlParser htmlParser;
         private const int InitialCrawlDepthLevel = 0;
         public int MaxCrawlDepth { get; set; } = 1;
-        public string Errors { get; set; } = string.Empty;
+        private ILogger logger;
 
-        public WebCrawler()
+        public WebCrawler(ILogger logger)
         {
+            this.logger = logger;
+            htmlParser = new HtmlParser(logger);
         }
 
         public async Task<CrawlResult> PerformCrawlingAsync(List<string> rootUrls)
@@ -38,12 +41,6 @@ namespace CrawlerLibrary
         private async Task<CrawlResult> AddToResultsAsync(string currentUrl, int currentCrawlDepth)
         {
             List<string> childUrls = await htmlParser.GetUrlsAsync(currentUrl);
-            if (htmlParser.Errors.Length > 0)
-            {
-                Errors += htmlParser.Errors;
-                htmlParser.Errors = string.Empty;
-            }
-
 
             CrawlResult currentPageCrawlResult;
 
@@ -53,12 +50,12 @@ namespace CrawlerLibrary
             }
             else
             {
-                currentPageCrawlResult = new CrawlResult(currentUrl, stringToCrawlResult(childUrls));
+                currentPageCrawlResult = new CrawlResult(currentUrl, StringToCrawlResult(childUrls));
             }
             return currentPageCrawlResult;
         }
 
-        private List<CrawlResult> stringToCrawlResult(List<string> stringUrls)
+        private List<CrawlResult> StringToCrawlResult(List<string> stringUrls)
         {
             List<CrawlResult> CrawlResultUrls = new List<CrawlResult>();
             foreach (string url in stringUrls)

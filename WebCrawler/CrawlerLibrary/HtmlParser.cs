@@ -2,13 +2,18 @@
 using System.Threading.Tasks;
 using System.Net.Http;
 using System;
-using AngleSharp;
+using Logger;
 namespace CrawlerLibrary
 {
     internal class HtmlParser
     {
         private AngleSharp.Parser.Html.HtmlParser angleParser = new AngleSharp.Parser.Html.HtmlParser();
-        public string Errors { get; set; } = string.Empty;
+        private ILogger logger;
+
+        public HtmlParser(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         internal Task<List<string>> GetUrlsAsync(string url)
         {
@@ -18,8 +23,9 @@ namespace CrawlerLibrary
                 {
                     return GetUrls(url);
                 }
-                catch
+                catch (Exception e)
                 {
+                    logger.WriteToLog(e);
                     return null;
                 }
 
@@ -31,7 +37,7 @@ namespace CrawlerLibrary
         {
             var urls = new List<string>();
             string page = await GetPageContent(url);
-            var document = angleParser.Parse(page);
+            var document = await angleParser.ParseAsync(page);
             foreach (var element in document.QuerySelectorAll("a"))
             {
                 
@@ -49,12 +55,31 @@ namespace CrawlerLibrary
             return urls;
         }
 
+
+        private async Task<string> GetPageContent(string url)
+        {
+            string pageContent = string.Empty;
+            using (HttpClient webClient = new HttpClient())
+            {
+                try
+                {
+                    pageContent = await webClient.GetStringAsync(url);
+                }
+                catch(Exception e)
+                {
+                    logger.WriteToLog(e, url);    
+                }           
+
+            }
+            return pageContent;
+        }
+
         private string RelativeToAbsolute(string url, string parentUrl)
         {
             switch (url[0])
             {
                 case '/':
-                    if ((url.Length>1)&&(url[1] == '/'))
+                    if ((url.Length > 1) && (url[1] == '/'))
                         url = "http:" + url;
                     else
                         url = parentUrl + url;
@@ -73,31 +98,6 @@ namespace CrawlerLibrary
                     break;
             }
             return url;
-        }
-        private async Task<string> GetPageContent(string url)
-        {
-            string pageContent = string.Empty;
-            using (HttpClient webClient = new HttpClient())
-            {
-                try
-                {
-                    pageContent = await webClient.GetStringAsync(url);
-                }
-                catch(Exception e)
-                {
-                    if (e.InnerException != null)
-                    {
-                        Errors += String.Format("{0} : {1} \r\n", url, e.InnerException.Message);
-                    }
-                    else
-                    {
-                        Errors += String.Format("{0} : {1} \r\n", url, e.Message);
-                    }
-    
-                }           
-
-            }
-            return pageContent;
         }
     }    
 }

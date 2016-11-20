@@ -3,12 +3,15 @@ using System;
 using CrawlerLibrary;
 using CrawlerUI.Model;
 using System.Windows;
+using Logger;
 namespace CrawlerUI.ViewModel
 {
     internal class CrawlerViewModel : ViewModelBase
     {
+        private ILogger logger;
 
-        private CrawlerModel model = new CrawlerModel();
+        private CrawlerModel model;
+
         private CrawlResult _crawlResult;
         public CrawlResult CrawlResult
         {
@@ -61,6 +64,9 @@ namespace CrawlerUI.ViewModel
         }
         internal CrawlerViewModel()
         {
+            logger = Logger.Logger.Instance;
+            model = new CrawlerModel(logger);
+
             _asyncCrawlingCommand  = new AsyncCrawlingCommand(async () => {
                 if (_asyncCrawlingCommand.CanExecute)
                 {
@@ -69,17 +75,13 @@ namespace CrawlerUI.ViewModel
                     try
                     {
                         CrawlResult = await model.RunApplication();
-                        if (model.Errors.Length > 0)
-                        {
-                            Messages += model.Errors;
-                            model.Errors = string.Empty;
-                        }
                     }
                     catch(Exception e)
                     {
-                        Messages += "\r\n" + e.Message;
+                        logger.WriteToLog(e.Message);
                     }
-                    
+
+                    Messages = logger.GetLog();
                     _asyncCrawlingCommand.CanExecute = true;
                     IsCrawling = Visibility.Hidden;
                 }

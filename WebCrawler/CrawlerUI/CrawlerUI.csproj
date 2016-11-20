@@ -125,6 +125,10 @@
       <Project>{bf412b9d-ba80-42fc-aa78-9c417bc7dea4}</Project>
       <Name>CrawlerLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{fa662921-f92e-48b4-8c74-23a4f6e53454}</Project>
+      <Name>Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\font-awesome.css" />
