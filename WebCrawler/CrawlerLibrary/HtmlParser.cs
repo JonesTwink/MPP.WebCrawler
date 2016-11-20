@@ -13,27 +13,9 @@ namespace CrawlerLibrary
         public HtmlParser(ILogger logger)
         {
             this.logger = logger;
-        }
+        } 
 
-        internal Task<List<string>> GetUrlsAsync(string url)
-        {
-            var parsingTask = Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    return GetUrls(url);
-                }
-                catch (Exception e)
-                {
-                    logger.WriteToLog(e);
-                    return null;
-                }
-
-            });
-            return parsingTask.Result;
-        }
-
-        private async Task<List<string>> GetUrls(string url)
+        internal async Task<List<string>> GetUrlsAsync(string url)
         {
             var urls = new List<string>();
             string page = await GetPageContent(url);
@@ -55,7 +37,6 @@ namespace CrawlerLibrary
             return urls;
         }
 
-
         private async Task<string> GetPageContent(string url)
         {
             string pageContent = string.Empty;
@@ -68,8 +49,7 @@ namespace CrawlerLibrary
                 catch(Exception e)
                 {
                     logger.WriteToLog(e, url);    
-                }           
-
+                }
             }
             return pageContent;
         }
