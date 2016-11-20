@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CrawlerLibrary
 {
-    public class WebCrawler: ISimpleWebCrawler
+    public class WebCrawler : ISimpleWebCrawler
     {
         private HtmlParser htmlParser = new HtmlParser();
         private const int InitialCrawlDepthLevel = 0;
-
         public int MaxCrawlDepth { get; set; } = 1;
+        public string Errors { get; set; } = string.Empty;
 
         public WebCrawler()
         {
@@ -24,21 +24,48 @@ namespace CrawlerLibrary
 
         public async Task<CrawlResult> PerformCrawlingAsync(List<string> rootUrls, string parentUrl, int currentCrawlDepth)
         {
-            if (currentCrawlDepth > MaxCrawlDepth)
-                return new CrawlResult(parentUrl, null);
             currentCrawlDepth++;
 
-            var results = new List<CrawlResult>();
-
-            foreach (string currentUrl in rootUrls )
+            List<CrawlResult> results = new List<CrawlResult>();
+            foreach (string currentUrl in rootUrls)
             {
-                List<string> childUrls = await htmlParser.GetUrlsAsync(currentUrl);
-                CrawlResult currentPageCrawlResult = await PerformCrawlingAsync(childUrls, currentUrl, currentCrawlDepth);
-                                
-                results.Add(currentPageCrawlResult);
+                results.Add(await AddToResultsAsync(currentUrl, currentCrawlDepth));
             }
 
             return new CrawlResult(parentUrl, results);
+        }
+
+        private async Task<CrawlResult> AddToResultsAsync(string currentUrl, int currentCrawlDepth)
+        {
+            List<string> childUrls = await htmlParser.GetUrlsAsync(currentUrl);
+            if (htmlParser.Errors.Length > 0)
+            {
+                Errors += htmlParser.Errors;
+                htmlParser.Errors = string.Empty;
+            }
+
+
+            CrawlResult currentPageCrawlResult;
+
+            if (currentCrawlDepth < MaxCrawlDepth)
+            {
+                currentPageCrawlResult = await PerformCrawlingAsync(childUrls, currentUrl, currentCrawlDepth);
+            }
+            else
+            {
+                currentPageCrawlResult = new CrawlResult(currentUrl, stringToCrawlResult(childUrls));
+            }
+            return currentPageCrawlResult;
+        }
+
+        private List<CrawlResult> stringToCrawlResult(List<string> stringUrls)
+        {
+            List<CrawlResult> CrawlResultUrls = new List<CrawlResult>();
+            foreach (string url in stringUrls)
+            {
+                CrawlResultUrls.Add(new CrawlResult(url, null));
+            }
+            return CrawlResultUrls;
         }
     }
 }

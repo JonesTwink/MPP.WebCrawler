@@ -9,6 +9,7 @@ namespace CrawlerLibrary
     public interface ISimpleWebCrawler
     {
         int MaxCrawlDepth { get; set; }
+        string Errors { get; set; }
         Task<CrawlResult> PerformCrawlingAsync(List<string> rootUrls);
     }
 }

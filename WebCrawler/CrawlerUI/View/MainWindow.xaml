@@ -12,6 +12,7 @@
         <ViewModelNamespace:CrawlerViewModel x:Key="CrawlerViewModel"/>
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <local:TreeViewConverter x:Key="TreeViewConverter"/>
+        <local:ListToStringConverter x:Key="ListToStringConverter"/>
     </Window.Resources>
     <Grid DataContext="{StaticResource CrawlerViewModel}" Name="MainGrid" Background="#FF131313">
         <StackPanel HorizontalAlignment="Stretch" Height="257" VerticalAlignment="top" >
@@ -24,9 +25,14 @@
         </StackPanel>
         <TreeView ItemsSource="{Binding CrawlResult, Converter={StaticResource TreeViewConverter}}" Visibility="{Binding IsCrawling, Converter={StaticResource InverseBooleanConverter}}" x:Name="treeView"   HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Background="#00000000" FontFamily="Consolas" Margin="0,0,0,70" BorderBrush="#00828790"/>
 
-        <StackPanel HorizontalAlignment="Stretch" Height="65" VerticalAlignment="Bottom" Background="#FF171717" />
+        <StackPanel HorizontalAlignment="Stretch" Height="65" VerticalAlignment="Bottom" Background="#FF171717" >
+            <TextBox Text="{Binding Messages}" x:Name="textBox" Height="63" TextWrapping="Wrap" HorizontalAlignment="Right"  Foreground="LightGreen" Background="#FF171717" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        		ScrollViewer.VerticalScrollBarVisibility="Auto" Width="547" BorderBrush="#FF464646" Margin="0,1,1,0" />
 
-        <StackPanel Margin="0,0,0,-14" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="70" Width="91">
+
+        </StackPanel>
+
+        <StackPanel Margin="0,0,0,-14" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="70" Width="91">
             <Button Command="{Binding AsyncCrawlingCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50" HorizontalContentAlignment="Left" BorderBrush="{x:Null}" Foreground="{x:Null}"  FontSize="18.667" FontFamily="Consolas" FontWeight="Bold" Margin="20,0,21,0">
 
                 <Button.Style>

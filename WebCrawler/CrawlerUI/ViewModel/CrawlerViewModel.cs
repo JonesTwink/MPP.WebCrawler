@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System;
 using CrawlerLibrary;
 using CrawlerUI.Model;
 using System.Windows;
@@ -44,6 +45,20 @@ namespace CrawlerUI.ViewModel
                 }
             }
         }
+
+        private string _messages;
+        public string Messages
+        {
+            get
+            {
+                return _messages;
+            }
+            set
+            {
+                _messages = value;
+                RaisePropertyChanged(nameof(Messages));
+            }
+        }
         internal CrawlerViewModel()
         {
             _asyncCrawlingCommand  = new AsyncCrawlingCommand(async () => {
@@ -51,7 +66,20 @@ namespace CrawlerUI.ViewModel
                 {
                     IsCrawling = Visibility.Visible;
                     _asyncCrawlingCommand.CanExecute = false;
-                    CrawlResult = await model.RunApplication();
+                    try
+                    {
+                        CrawlResult = await model.RunApplication();
+                        if (model.Errors.Length > 0)
+                        {
+                            Messages += model.Errors;
+                            model.Errors = string.Empty;
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Messages += "\r\n" + e.Message;
+                    }
+                    
                     _asyncCrawlingCommand.CanExecute = true;
                     IsCrawling = Visibility.Hidden;
                 }

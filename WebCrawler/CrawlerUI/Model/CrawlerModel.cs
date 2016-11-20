@@ -8,13 +8,19 @@ namespace CrawlerUI.Model
     {
         private PreferencesLoader preferences = new PreferencesLoader();
         private ISimpleWebCrawler webCrawler = new WebCrawler();
-
+        public string Errors { get; set; } = string.Empty;
         internal async Task<CrawlResult> RunApplication()
         {
             preferences.LoadPreferences();
             webCrawler.MaxCrawlDepth = preferences.Depth;
 
-            return await webCrawler.PerformCrawlingAsync(preferences.URLs);           
+            var result = await webCrawler.PerformCrawlingAsync(preferences.URLs);
+            if (webCrawler.Errors.Length > 0)
+            {
+                Errors += webCrawler.Errors;
+                webCrawler.Errors = string.Empty;
+            }
+            return result;         
 
         }
     }
